@@ -8,8 +8,12 @@ function Greeting({initialName = ''}) {
   // 💰 window.localStorage.getItem('name') ?? initialName
 
   // custom hook
-  function useLocalStorage(name) {
-    return () => window.localStorage.getItem(name) ?? initialName
+  function useLocalStorage(...args) {
+    if (args.length === 1) {
+      return () => window.localStorage.getItem(args[0]) ?? initialName
+    } else if (args.length === 2) {
+      return () => window.localStorage.setItem(args[0], args[1]) ?? initialName
+    }
   }
 
   // lazy state initialization
@@ -18,9 +22,10 @@ function Greeting({initialName = ''}) {
   // 🐨 Here's where you'll use `React.useEffect`.
   // The callback should set the `name` in localStorage.
   // 💰 window.localStorage.setItem('name', name)
+  const accessLocalStorage = useLocalStorage('name', name)
   React.useEffect(() => {
-    window.localStorage.setItem('name', name)
-  }, [name])
+    accessLocalStorage()
+  }, [accessLocalStorage])
 
   function handleChange(event) {
     setName(event.target.value)

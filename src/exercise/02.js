@@ -10,9 +10,12 @@ function Greeting({initialName = ''}) {
   // custom hook
   function useLocalStorage(...args) {
     if (args.length === 1) {
-      return () => window.localStorage.getItem(args[0]) ?? initialName
+      return () =>
+        JSON.parse(window.localStorage.getItem(args[0])) ?? initialName
     } else if (args.length === 2) {
-      return () => window.localStorage.setItem(args[0], args[1]) ?? initialName
+      return () =>
+        window.localStorage.setItem(args[0], JSON.stringify(args[1])) ??
+        initialName
     }
   }
 
